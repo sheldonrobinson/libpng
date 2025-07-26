@@ -1044,29 +1044,33 @@ endif()
 
 # Install.
 if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-  install(TARGETS ${PNG_LIBRARY_TARGETS}
-          EXPORT libpng
-          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-          FRAMEWORK DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+	IF(PNG_INSTALL)
+	  install(TARGETS ${PNG_LIBRARY_TARGETS}
+			  EXPORT libpng
+			  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+			  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+			  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+			  FRAMEWORK DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
-  if(PNG_SHARED)
-    # Create a symlink for libpng.dll.a => libpng16.dll.a on Cygwin
-    if(NOT WIN32 OR CYGWIN OR MINGW)
-      create_symlink(libpng${CMAKE_SHARED_LIBRARY_SUFFIX} TARGET png_shared)
-      install(FILES "$<TARGET_LINKER_FILE_DIR:png_shared>/libpng${CMAKE_SHARED_LIBRARY_SUFFIX}"
-              DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-    endif()
-  endif()
+	  if(PNG_SHARED)
+		# Create a symlink for libpng.dll.a => libpng16.dll.a on Cygwin
+		if(NOT WIN32 OR CYGWIN OR MINGW)
+		
+		  create_symlink(libpng${CMAKE_SHARED_LIBRARY_SUFFIX} TARGET png_shared)
+		  install(FILES "$<TARGET_LINKER_FILE_DIR:png_shared>/libpng${CMAKE_SHARED_LIBRARY_SUFFIX}"
+				  DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+		endif()
+	  endif()
 
-  if(PNG_STATIC)
-    if(NOT WIN32 OR CYGWIN OR MINGW)
-      create_symlink(libpng${CMAKE_STATIC_LIBRARY_SUFFIX} TARGET png_static)
-      install(FILES "$<TARGET_LINKER_FILE_DIR:png_static>/libpng${CMAKE_STATIC_LIBRARY_SUFFIX}"
-              DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-    endif()
-  endif()
+	  if(PNG_STATIC)
+		if(NOT WIN32 OR CYGWIN OR MINGW)
+
+			  create_symlink(libpng${CMAKE_STATIC_LIBRARY_SUFFIX} TARGET png_static)
+			  install(FILES "$<TARGET_LINKER_FILE_DIR:png_static>/libpng${CMAKE_STATIC_LIBRARY_SUFFIX}"
+					  DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+		endif()
+	  endif()
+	endif()
 endif()
 
 if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
@@ -1077,10 +1081,12 @@ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
 endif()
 if(NOT SKIP_INSTALL_EXECUTABLES AND NOT SKIP_INSTALL_ALL)
   if(NOT WIN32 OR CYGWIN OR MINGW)
-    install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/libpng-config"
-            DESTINATION "${CMAKE_INSTALL_BINDIR}")
-    install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}-config"
-            DESTINATION "${CMAKE_INSTALL_BINDIR}")
+	IF(PNG_INSTALL)
+		install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/libpng-config"
+				DESTINATION "${CMAKE_INSTALL_BINDIR}")
+		install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}-config"
+				DESTINATION "${CMAKE_INSTALL_BINDIR}")
+	endif()
   endif()
 endif()
 
